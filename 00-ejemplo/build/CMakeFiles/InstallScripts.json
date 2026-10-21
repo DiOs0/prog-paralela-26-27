@@ -1,0 +1,11 @@
+{
+	"Configs" : 
+	[
+		"Debug"
+	],
+	"InstallScripts" : 
+	[
+		"C:/prog-paralela-26-27/00-ejemplo/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

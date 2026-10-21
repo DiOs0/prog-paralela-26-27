@@ -1,0 +1,3 @@
+C:/prog-paralela-26-27/00-ejemplo/build/CMakeFiles/ejemplo00.dir
+C:/prog-paralela-26-27/00-ejemplo/build/CMakeFiles/edit_cache.dir
+C:/prog-paralela-26-27/00-ejemplo/build/CMakeFiles/rebuild_cache.dir
