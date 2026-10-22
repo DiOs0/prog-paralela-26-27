@@ -1,0 +1,39 @@
+# Builds (cualquier subcarpeta)
+build/
+build-*/
+out/
+cmake-build-*/
+
+# Archivos generados por CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+*.ninja
+.ninja_deps
+.ninja_log
+.cmake/
+
+# Binarios y objetos
+*.exe
+*.out
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.pdb
+*.ilk
+*.exp
+
+# vcpkg (instalaciones locales)
+vcpkg_installed/
+
+# IDE / SO
+.vs/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
