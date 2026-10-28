@@ -7,7 +7,7 @@
 
 std::complex<double> c(-0.7, 0.27015);
 
-int max_iteraciones = 50;
+int max_iteraciones = 100;
 
 uint32_t acotado(std::complex<double> z0)
 {

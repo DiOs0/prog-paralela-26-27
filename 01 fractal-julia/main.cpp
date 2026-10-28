@@ -18,23 +18,21 @@ double y_max = 1.0;
 // imagen, textura
 uint32_t *buffer = nullptr;
 
-
 int main()
 {
 
-    buffer = new uint32_t[WIDTH*HEIGHT];
+    buffer = new uint32_t[WIDTH * HEIGHT];
 
     // Create the main window
     sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "Dibujo funcion");
-
-    julia_serial(x_min, y_min, x_max, y_max, WIDTH, HEIGHT,buffer);
 
     // Load a sprite to display
     sf::Texture texture({WIDTH, HEIGHT});
     sf::Sprite sprite(texture);
 
-    texture.update((const uint8_t*)buffer);
-
+    int frames = 0;
+    int fps = 0;
+    sf::Clock clock;
 
     // Start the game loop
     while (window.isOpen())
@@ -47,6 +45,20 @@ int main()
                 window.close();
         }
 
+        julia_serial(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
+        texture.update((const uint8_t *)buffer);
+
+        // medir fps
+        frames++;
+
+        if (clock.getElapsedTime().asSeconds() >= 1.0f) {
+            fps = frames;
+            frames = 0;
+            clock.restart();
+        }
+
+        std::cout<<"FPS: "<<fps<<std::endl;
+
         // Clear screen
         window.clear();
 
@@ -55,9 +67,6 @@ int main()
 
         // Update the window
         window.display();
-
-        
- 
     }
 
     return 0;
