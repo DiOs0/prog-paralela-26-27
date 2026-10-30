@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fmt/core.h>
+#include <fmt/format.h>
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp> //Busca en el sistema o en alguna dependencia
@@ -26,6 +27,17 @@ int main()
     // Create the main window
     sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "Dibujo funcion");
 
+ 
+
+    //Configurar textos
+        sf::Font font("arial.ttf");
+        sf::Text text(font,"Fractal",24);
+        text.setFillColor(sf::Color::Blue);
+        text.setPosition({10,10});
+        text.setStyle(sf::Text::Bold);
+
+        
+
     // Load a sprite to display
     sf::Texture texture({WIDTH, HEIGHT});
     sf::Sprite sprite(texture);
@@ -45,6 +57,9 @@ int main()
                 window.close();
         }
 
+        
+
+
         julia_serial(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
         texture.update((const uint8_t *)buffer);
 
@@ -57,16 +72,23 @@ int main()
             clock.restart();
         }
 
-        std::cout<<"FPS: "<<fps<<std::endl;
+        auto msg = fmt::format("Fractal - Iteraciones: {},FPS:{}",100,fps);
+        text.setString(msg);
+
+
+        //std::cout<<"FPS: "<<fps<<std::endl;
 
         // Clear screen
         window.clear();
 
         // Draw the sprite
         window.draw(sprite);
+        window.draw(text);
 
         // Update the window
         window.display();
+
+        
     }
 
     return 0;
