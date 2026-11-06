@@ -27,16 +27,18 @@ int main()
     // Create the main window
     sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "Dibujo funcion");
 
- 
+    // Configurar textos
+    sf::Font font("arial.ttf");
+    sf::Text text(font, "Fractal", 24);
+    text.setFillColor(sf::Color::Blue);
+    text.setPosition({10, 10});
+    text.setStyle(sf::Text::Bold);
 
-    //Configurar textos
-        sf::Font font("arial.ttf");
-        sf::Text text(font,"Fractal",24);
-        text.setFillColor(sf::Color::Blue);
-        text.setPosition({10,10});
-        text.setStyle(sf::Text::Bold);
-
-        
+    std::string options = "[1] Serial | Up/Downn: Iterations";
+    sf::Text text_options(font, options, 24);
+    text_options.setFillColor(sf::Color::Blue);
+    text_options.setPosition({10, window.getView().getSize().y - 40});
+    text.setStyle(sf::Text::Bold);
 
     // Load a sprite to display
     sf::Texture texture({WIDTH, HEIGHT});
@@ -55,10 +57,21 @@ int main()
             // Close window: exit
             if (event->is<sf::Event::Closed>())
                 window.close();
+            else if (event->is<sf::Event::KeyReleased>())
+            {
+                auto evt = event->getIf<sf::Event::KeyReleased>();
+
+                switch (evt->scancode)
+                {
+                case sf::Keyboard::Scan::Up:
+                    max_iteraciones += 10;
+                    break;
+                case sf::Keyboard::Scan::Down:
+                    max_iteraciones -= 10;
+                    break;
+                }
+            }
         }
-
-        
-
 
         julia_serial(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
         texture.update((const uint8_t *)buffer);
@@ -66,17 +79,17 @@ int main()
         // medir fps
         frames++;
 
-        if (clock.getElapsedTime().asSeconds() >= 1.0f) {
+        if (clock.getElapsedTime().asSeconds() >= 1.0f)
+        {
             fps = frames;
             frames = 0;
             clock.restart();
         }
 
-        auto msg = fmt::format("Fractal - Iteraciones: {},FPS:{}",100,fps);
+        auto msg = fmt::format("Fractal - Iteraciones: {},FPS:{}", 100, fps);
         text.setString(msg);
 
-
-        //std::cout<<"FPS: "<<fps<<std::endl;
+        // std::cout<<"FPS: "<<fps<<std::endl;
 
         // Clear screen
         window.clear();
@@ -84,11 +97,10 @@ int main()
         // Draw the sprite
         window.draw(sprite);
         window.draw(text);
+        window.draw(text_options);
 
         // Update the window
         window.display();
-
-        
     }
 
     return 0;
