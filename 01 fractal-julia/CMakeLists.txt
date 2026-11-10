@@ -9,6 +9,7 @@ add_executable(fractal-julia
     fractal-serial.cpp
     main.cpp
     palette.cpp
+    fractal-simd.cpp
     )
 target_link_libraries(fractal-julia PRIVATE 
     fmt::fmt
