@@ -1,5 +1,3 @@
-
-
 #include "fractal-simd.h"
 
 #include "palette.h"
@@ -28,7 +26,8 @@ void julia_simd(double x_min, double y_min, double x_max, double y_max,
     __m256 xscale = _mm256_set1_ps(dx);
     __m256 yscale = _mm256_set1_ps(dy);
 
-    
+    __m256 c_real = _mm256_set1_ps(c.real()); // cx, cx, cx, cx, cx,cx ,cx ,cx
+    __m256 c_imag = _mm256_set1_ps(c.imag()); // cy, cy, cy, cy, cy, cy, cy, cy
 
     __m256 max_norma = _mm256_set1_ps(4.0);
 
@@ -47,10 +46,7 @@ void julia_simd(double x_min, double y_min, double x_max, double y_max,
             __m256 cr = _mm256_add_ps(xmin, _mm256_mul_ps(mx, xscale));
 
             // ymax+my+yscale ---> (y0,y1,y2 .....) ----> imaginario
-            __m256 ci = _mm256_add_ps(ymax, _mm256_mul_ps(my, yscale));
-
-            __m256 c_real = _mm256_set1_ps(c.real()); // cx, cx, cx, cx, cx,cx ,cx ,cx
-    __m256 c_imag = _mm256_set1_ps(c.imag()); // cy, cy, cy, cy, cy, cy, cy, cy
+            __m256 ci = _mm256_sub_ps(ymax, _mm256_mul_ps(my, yscale));
 
             int iter = 0;
             __m256 mk = _mm256_set1_ps(iter);
