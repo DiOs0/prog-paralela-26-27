@@ -26,8 +26,9 @@ uint32_t *buffer = nullptr;
 
 
 enum class runtime_type {
-    SERIAL_1,
     //Puede tener mas variaciones
+    SERIAL_1,
+    SERIAL_2,    
     SIMD
 };
 
@@ -48,7 +49,7 @@ int main()
     text.setPosition({10, 10});
     text.setStyle(sf::Text::Bold);
 
-    std::string options = "[1] Serial [3] SIMD| Up/Downn: Iterations";
+    std::string options = "[1] Serial_1 [2] Serial_2 [3] SIMD| Up/Down: Iterations";
     sf::Text text_options(font, options, 24);
     text_options.setFillColor(sf::Color::Blue);
     text_options.setPosition({10, window.getView().getSize().y - 40});
@@ -86,6 +87,9 @@ int main()
                 case sf::Keyboard::Scan::Num1:
                     r_type=runtime_type::SERIAL_1;
                     break;
+                    case sf::Keyboard::Scan::Num2:
+                    r_type=runtime_type::SERIAL_2;
+                    break;
                 case sf::Keyboard::Scan::Num3:
                     r_type=runtime_type::SIMD;
                     break;
@@ -102,9 +106,15 @@ int main()
 
         if(r_type==runtime_type::SERIAL_1){
             mode="Serial 1";
-        julia_serial(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
+        julia_serial_1(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
         
-        }else if(r_type==runtime_type::SIMD){
+        }else if(r_type==runtime_type::SERIAL_2){
+            mode="SERIAL 2";
+            julia_serial_2(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
+
+        }
+        
+        else if(r_type==runtime_type::SIMD){
             mode="Simd";
             julia_simd(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
 

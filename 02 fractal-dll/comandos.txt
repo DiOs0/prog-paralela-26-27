@@ -1,0 +1,1 @@
+nm -D libfractal-julia.so | grep julia_simd
