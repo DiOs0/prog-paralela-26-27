@@ -3,12 +3,16 @@
 #include <fmt/format.h>
 #include <complex>
 #include <cstring>//memset
+#include <omp.h>
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp> //Busca en el sistema o en alguna dependencia
 
 #include "fractal-serial.h" //Entre comillas si el módulo está dentro del Proyecto
 #include "fractal-simd.h" 
+#include "fractal-openmp.h" 
+
+
 
 
 
@@ -29,11 +33,23 @@ enum class runtime_type {
     //Puede tener mas variaciones
     SERIAL_1,
     SERIAL_2,    
-    SIMD
+    SIMD,
+    OPENMP,
+    OpenMPFor
 };
+
+int thread_count=0;
 
 int main()
 {
+    #pragma omp parallel
+    {
+        #pragma omp master
+        {
+            thread_count= omp_get_num_threads();
+        }
+
+    }
 
     buffer = new uint32_t[WIDTH * HEIGHT];
 
@@ -49,7 +65,7 @@ int main()
     text.setPosition({10, 10});
     text.setStyle(sf::Text::Bold);
 
-    std::string options = "[1] Serial_1 [2] Serial_2 [3] SIMD| Up/Down: Iterations";
+    std::string options = "[1] Serial_1 [2] Serial_2 [3] SIMD [4] OPENMP [5] OPENMPFOR| Up/Down: Iterations";
     sf::Text text_options(font, options, 24);
     text_options.setFillColor(sf::Color::Blue);
     text_options.setPosition({10, window.getView().getSize().y - 40});
@@ -93,6 +109,12 @@ int main()
                 case sf::Keyboard::Scan::Num3:
                     r_type=runtime_type::SIMD;
                     break;
+                case sf::Keyboard::Scan::Num4:
+                    r_type=runtime_type::OPENMP;
+                    break;
+                case sf::Keyboard::Scan::Num5:
+                    r_type=runtime_type::OpenMPFor;
+                    break;
 
                 
             }
@@ -117,6 +139,16 @@ int main()
         else if(r_type==runtime_type::SIMD){
             mode="Simd";
             julia_simd(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
+
+        }
+        else if(r_type==runtime_type::OPENMP){
+            mode=fmt::format("Julia OpenMP({} threads)",thread_count);
+            julia_openmp(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
+
+        }
+        else if(r_type==runtime_type::OpenMPFor){
+            mode=fmt::format("Julia OpenMPFOR({} threads)",thread_count);
+            julia_openmp_for(x_min, y_min, x_max, y_max, WIDTH, HEIGHT, buffer);
 
         }
 
