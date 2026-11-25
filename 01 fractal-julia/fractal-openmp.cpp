@@ -9,29 +9,36 @@
 extern std::complex<double> c;
 extern int max_iteraciones;
 
-uint32_t acotado_openmp(std::complex<double> z0)
+uint32_t acotado_openmp(double x, double y)
 {
 
+    // datos: c, z0
+    // Zn+1 = Zn^2 + c
     int iter = 0;
 
-    std::complex<double> z = z0;
+    double zr = x;
+    double zi = y;
 
-    while (iter < max_iteraciones && std::abs(z) < 2.0)
-    {
-        z = z * z + c;
+    while (iter < max_iteraciones && (zr * zr + zi * zi) < 4.0){
+        //Zn+1 = Zn² + c
+        double new_zr = zr*zr - zi*zi + c.real();
+        double new_zi = 2 *zr * zi + c.imag();
+
+        zr = new_zr;
+        zi = new_zi;
+
         iter++;
     }
 
-    if (iter < max_iteraciones)
-    {
-        // norma>2
-        // return 0xFFFFFFFF; // Blanco
+    if (iter < max_iteraciones){
+        // return 0xFFFFFFFF; // blanco
         int index = iter % PALETTE_SIZE;
         return color_ramp[index];
     }
-
-    // norma<=2
-    return 0x00000000; // Negro
+    else{
+        // norma<=2
+        return 0x00000000; // negro
+    }
 }
 
 void julia_openmp(double x_min, double y_min, double x_max, double y_max,
@@ -66,9 +73,7 @@ void julia_openmp(double x_min, double y_min, double x_max, double y_max,
                 double x = x_min + i * dx;
                 double y = y_max - j * dy;
 
-                std::complex<double> z0(x, y);
-
-                uint32_t color = acotado_openmp(z0);
+                uint32_t color = acotado_openmp(x,y);
 
                 pixel_buffer[j * width + i] = color;
             }
@@ -92,9 +97,7 @@ void julia_openmp_for(double x_min, double y_min, double x_max, double y_max,
             double x = x_min + i * dx;
             double y = y_max - j * dy;
 
-            std::complex<double> z0(x, y);
-
-            uint32_t color = acotado_openmp(z0);
+            uint32_t color = acotado_openmp(x,y);
 
             pixel_buffer[j * width + i] = color;
         }
